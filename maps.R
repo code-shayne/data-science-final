@@ -1,1 +1,7 @@
 library(tidyverse)
+library(sf)
+library(terra)
+library(dplyr)
+library(spData)
+library(spDataLarge)
+power_plant = read_csv("California_Power_Plants.csv")
