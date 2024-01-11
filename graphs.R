@@ -1,2 +1,2 @@
 library(tidyverse)
-read_csv("California_Power_Plants.csv")
+power_plant = read_csv("California_Power_Plants.csv")
