@@ -35,3 +35,12 @@ ca_base <- ggplot(data = ca_df, mapping = aes(x = long, y = lat, group = group))
   geom_polygon(color = "black", fill = "gray")
 ca_base + geom_polygon(data = ca_county, fill = NA, color = "white") +
   geom_polygon(color = "black", fill = NA) + geom_point(data=power_plant, mapping = aes(x=X , y=Y))
+=======
+library(dplyr)
+library(spData)
+library(spDataLarge)
+library(tmap)
+library(leaflet) 
+library(ggplot2)
+power_plant = read_csv("California_Power_Plants.csv")
+>>>>>>> fd0b0d48c411718285f37dd11e5486521d5a2286
