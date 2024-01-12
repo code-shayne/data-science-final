@@ -7,6 +7,8 @@ library(tmap)
 library(tmaptools)
 library(tigris)
 library(leaflet) 
+library(readxl)
+library(ggmap)
 power_plant = read_csv("California_Power_Plants.csv")
 us_geo <- tigris::states(class = "sf")
 class(us_geo)
@@ -33,14 +35,28 @@ ca_county <- subset(counties, region == "california")
 ca_base <- ggplot(data = ca_df, mapping = aes(x = long, y = lat, group = group)) + 
   coord_fixed(1.3) + 
   geom_polygon(color = "black", fill = "gray")
-ca_base + geom_polygon(data = ca_county, fill = NA, color = "white") +
-  geom_polygon(color = "black", fill = NA) + geom_point(data=power_plant, mapping = aes(x=X , y=Y))
-=======
-library(dplyr)
-library(spData)
-library(spDataLarge)
-library(tmap)
-library(leaflet) 
-library(ggplot2)
-power_plant = read_csv("California_Power_Plants.csv")
->>>>>>> fd0b0d48c411718285f37dd11e5486521d5a2286
+
+api <- 'AIzaSyCIIr_a0MnPo8Vn-3uGVR32EoJ3ufMY9sc'
+register_google(key = api)
+plants <- make_bbox(lon = power_plant$X , lat = power_plant$Y, f = 0.1)
+sq_map <- get_map(location = plants, maptype = "roadmap", source = "google", api_key = api)
+ditch_the_axes <- theme(
+  axis.text = element_blank(),
+  axis.line = element_blank(),
+  axis.ticks = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.title = element_blank()
+)
+ggmap(sq_map) + geom_point(data = power_plant, mapping = aes(x = X, y = Y, color = Retired_Plant)) +
+  ditch_the_axes + labs(title = "Power Plants in California")
+#color by if retired or not, size by capacity range (make capacity ranges)
+
+
+
+
+ca_base + geom_polygon(data = ca_county, fill = NA, color = "white")+
+  geom_polygon(color = "black", fill = NA)
++ geom_point(data=power_plant, mapping = aes(x=X , y=Y))
+
+
