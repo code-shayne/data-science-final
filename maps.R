@@ -80,14 +80,15 @@ county_count <- power_plant |>
   group_by(County)|> 
   summarize(num_plants = sum(active_num))
 county_count
+ca_county <- read_csv("counties.csv")
 
 ca_base + geom_polygon(data = ca_county, fill = NA, color = "white")+
   geom_polygon(color = "black", fill = NA)+
-  geom_polygon(data = county_count, aes(fill = num_plants), color = "white") +
+  geom_polygon(data = ca_county, aes(fill = num_plants), color = "white") +
   geom_polygon(color = "black", fill = NA) +
   theme_bw() +
   ditch_the_axes
 
 + geom_point(data=power_plant, mapping = aes(x=X , y=Y))
-
+write.csv(ca_county, "C:/Users/slada/Desktop/counties")
 
