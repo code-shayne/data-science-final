@@ -63,6 +63,7 @@ ggmap(sq_map) + geom_point(data = power_plant, mapping = aes(x = X, y = Y, color
   theme(plot.title=element_text(face="bold",hjust=.5,vjust=.8,colour="Black",size=20))+
   theme(plot.caption=element_text(vjust=4,colour="grey10",size=9))+
   scale_color_manual(values=c("gray40", "#0a06d6"))+
+  theme(plot.background = element_rect(fill = "snow2"))+
   theme(panel.border = element_rect(color = "black", 
                                     fill = NA, 
                                     size = 1))
@@ -82,12 +83,27 @@ county_count <- power_plant |>
 county_count
 ca_county <- read_csv("counties.csv")
 
+library(RColorBrewer)
+myPalette = colorRampPalette(brewer.pal(n=4, "Blues"))
+
 ca_base + geom_polygon(data = ca_county, fill = NA, color = "white")+
   geom_polygon(color = "black", fill = NA)+
   geom_polygon(data = ca_county, aes(fill = num_plants), color = "white") +
   geom_polygon(color = "black", fill = NA) +
   theme_bw() +
-  ditch_the_axes
+  ditch_the_axes+
+  labs(title = "Number of Power Plants in Each County", fill = "Number of Plants")+
+  theme(plot.title=element_text(face="bold",hjust=.5,vjust=.8,colour="Black",size=20))+
+  theme(panel.background = element_rect(fill = "white"))+
+  scale_fill_continuous(low = "honeydew2", high = "forestgreen")+
+  annotate("text", x = -121, y = 33.6, label = "Los Angelos County has the most", size=3, colour="forestgreen")+
+  annotate("text", x = -121, y = 33.35, label = "power plants with 208 in total", size=3, colour="forestgreen")+
+  annotate("segment", x = -118.9, xend = -118, y = 33.7, yend = 34.3, colour = "forestgreen")+
+  annotate("text", x = -117.5, y = 39.6, label = "Both Del Norte and Alpine", size=3, colour="forestgreen")+
+  annotate("text", x = -117.5, y = 39.35, label = "County have 0 power plants", size=3, colour="forestgreen")+
+  annotate("segment", x = -119.9, xend = -119, y = 38.7, yend = 39.2, colour = "forestgreen")+
+  annotate("segment", x = -123.8, xend = -119.15, y = 41.7, yend = 39.6, colour = "forestgreen")
+
 
 + geom_point(data=power_plant, mapping = aes(x=X , y=Y))
 write.csv(ca_county, "C:/Users/slada/Desktop/counties")
