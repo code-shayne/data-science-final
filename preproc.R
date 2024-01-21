@@ -1,2 +1,6 @@
 library(tidyverse)
 power_plant = read_csv("California_Power_Plants.csv")
+library(dataMaid)
+makeDataReport(power_plant, output = "html", replace = TRUE)
+library(DataExplorer)
+create_report(power_plant)
