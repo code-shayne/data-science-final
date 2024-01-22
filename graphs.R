@@ -18,9 +18,15 @@ power_plant <- power_plant |>
 p <- ggplot(power_plant, aes(x = pri_energy_source, y = capacity_latest)) + 
   geom_bar(stat = "identity")
 
+anim <- p + 
+  transition_states(Species,
+                    transition_length = 2,
+                    state_length = 1)
 
-
-
+animate(
+  anim + enter_fade() + exit_fly(y_loc = 1),
+  renderer = av_renderer()
+)
 
 
 
