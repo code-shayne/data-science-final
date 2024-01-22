@@ -7,6 +7,7 @@ library(tidyr)
 library(viridis)
 library(gganimate)
 library(av)
+library(animation)
 
 #read in and pre-process file
 power_plant = read_csv("California_Power_Plants.csv")
@@ -28,18 +29,30 @@ active_plants <- power_plant |>
 #p <- ggplot(county_count, aes(x = county, y = num_plants)) + 
  # geom_bar(stat = "identity")
 
-p <- ggplot(power_plant, aes(x="", y=pri_energy_source, fill=pri_energy_source)) +
-  geom_bar(stat="identity", width=1) +
-  coord_polar("y", start=0)
-anim <- p + 
-  transition_states(year,
-                    transition_length = 2,
-                    state_length = 1)
+#p <- ggplot(power_plant, aes(x="", y=pri_energy_source, fill=pri_energy_source)) +
+#  geom_bar(stat="identity", width=1) +
+ # coord_polar("y", start=0)
 
-animate(
-  anim + enter_fade() + exit_fly(y_loc = 1),
-  renderer = av_renderer()
-)
+i = 0
+saveGIF({
+  for (i in unique(power_plant$year)) {
+    p = ggplot(power_plant[power_plant$year==i,], aes(x="", y=pri_energy_source, fill=pri_energy_source, frame=year))+
+      geom_bar(width = 1, stat = "identity") + 
+      facet_grid(~year) +
+      coord_polar("y", start=0) 
+    print(p)
+  }
+}, movie.name="piechart1.gif")
+
+#anim <- p + 
+ # transition_states(year,
+ #                   transition_length = 2,
+  #                  state_length = 1)
+
+#animate(
+ # anim + enter_fade() + exit_fly(y_loc = 1),
+  #renderer = av_renderer()
+#)
 
 
 
