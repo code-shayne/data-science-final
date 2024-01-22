@@ -1,8 +1,10 @@
+#the actual maps only use a few of these but I 
+#imported a lot of libraries to try different 
+#things initially
 library(tidyverse)
 library(sf)
 library(terra)
 library(spData)
-library(spDataLarge)
 library(tmap)
 library(tmaptools)
 library(tigris)
@@ -35,19 +37,20 @@ contiguous_states <- HelperShapeObject|>
   filter(REGION != 9) |> 
   shift_geometry()
 tm_shape(contiguous_states) + tm_borders()
+#couldn't get it down to only California 
 
 #satellite CA map
-#only needed this on home computer
+#only needed this on my home computer
 install.packages("devtools")
 devtools::install_github("dkahle/ggmap")
 library(ggmap)
 library(devtools)
-#start from here prob
+#starts from here
 api <- 'AIzaSyCIIr_a0MnPo8Vn-3uGVR32EoJ3ufMY9sc'
-register_google(key = api)
+register_google(key = api) #to access the Google basemap you need an account and api key
 plants <- make_bbox(lon = power_plant$X , lat = power_plant$Y, f = 0.1)
 sq_map <- get_map(location = plants, maptype = "terrain", source = "google", api_key = api, zoom = 6)
-ditch_the_axes <- theme(
+ditch_the_axes <- theme( #gets rid of axes and labels
   axis.text = element_blank(),
   axis.line = element_blank(),
   axis.ticks = element_blank(),
@@ -62,14 +65,14 @@ ggmap(sq_map) + geom_point(data = power_plant, mapping = aes(x = X, y = Y, color
                         represented by the size of the points, ranging from <1 to >5000.")+
   theme(plot.title=element_text(face="bold",hjust=.5,vjust=.8,colour="Black",size=20))+
   theme(plot.caption=element_text(vjust=4,colour="grey10",size=9))+
-  scale_color_manual(values=c("gray40", "#0a06d6"))+
-  theme(plot.background = element_rect(fill = "snow2"))+
+  scale_color_manual(values=c("#96979b", "#284a7a"))+
+  theme(plot.background = element_rect(fill = "#e3e9ed"))+
   theme(panel.border = element_rect(color = "black", 
                                     fill = NA, 
                                     size = 1))
-#color by if retired or not, size by capacity range
+#colored by if retired or not, size by capacity range
 
-#CA state polygon map
+#CA state polygon map w/ counties
 states <- map_data("state")
 ca_df <- subset(states, region == "california")
 counties <- map_data("county")
@@ -81,10 +84,10 @@ county_count <- power_plant |>
   group_by(County)|> 
   summarize(num_plants = sum(active_num))
 county_count
-ca_county <- read_csv("counties.csv")
+ca_county <- read_csv("counties.csv") #added num_plants data to ca_county in excel
 
 library(RColorBrewer)
-myPalette = colorRampPalette(brewer.pal(n=4, "Blues"))
+myPalette = colorRampPalette(brewer.pal(n=4, "Blues")) #attempt to color the background that I didn't use
 
 ca_base + geom_polygon(data = ca_county, fill = NA, color = "white")+
   geom_polygon(color = "black", fill = NA)+
@@ -93,18 +96,16 @@ ca_base + geom_polygon(data = ca_county, fill = NA, color = "white")+
   theme_bw() +
   ditch_the_axes+
   labs(title = "Number of Power Plants in Each County", fill = "Number of Plants")+
-  theme(plot.title=element_text(face="bold",hjust=.5,vjust=.8,colour="Black",size=20))+
+  theme(plot.title=element_text(face="bold",hjust=0,vjust=-.75,colour="#0e2a47",size=16))+
   theme(panel.background = element_rect(fill = "white"))+
-  scale_fill_continuous(low = "honeydew2", high = "forestgreen")+
-  annotate("text", x = -121, y = 33.6, label = "Los Angelos County has the most", size=3, colour="forestgreen")+
-  annotate("text", x = -121, y = 33.35, label = "power plants with 208 in total", size=3, colour="forestgreen")+
-  annotate("segment", x = -118.9, xend = -118, y = 33.7, yend = 34.3, colour = "forestgreen")+
-  annotate("text", x = -117.5, y = 39.6, label = "Both Del Norte and Alpine", size=3, colour="forestgreen")+
-  annotate("text", x = -117.5, y = 39.35, label = "County have 0 power plants", size=3, colour="forestgreen")+
-  annotate("segment", x = -119.9, xend = -119, y = 38.7, yend = 39.2, colour = "forestgreen")+
-  annotate("segment", x = -123.8, xend = -119.15, y = 41.7, yend = 39.6, colour = "forestgreen")
+  scale_fill_continuous(low = "#cfd9e0", high = "#0e2a47")+
+  annotate("text", x = -121.6, y = 33.6, label = "Los Angeles County has the most", size=3, colour="#0e2a47")+
+  annotate("text", x = -121.6, y = 33.3, label = "power plants with 208 in total", size=3, colour="#0e2a47")+
+  annotate("segment", x = -118.9, xend = -118, y = 33.7, yend = 34.3, colour = "#0e2a47")+
+  annotate("text", x = -116.5, y = 39.6, label = "Both Del Norte and Alpine", size=3, colour="#0e2a47")+
+  annotate("text", x = -116.5, y = 39.35, label = "County have 0 power plants", size=3, colour="#0e2a47")+
+  annotate("segment", x = -119.9, xend = -119, y = 38.7, yend = 39.2, colour = "#0e2a47")+
+  annotate("segment", x = -123.8, xend = -119.15, y = 41.7, yend = 39.6, colour = "#0e2a47")
 
 
-+ geom_point(data=power_plant, mapping = aes(x=X , y=Y))
-write.csv(ca_county, "C:/Users/slada/Desktop/counties")
 
