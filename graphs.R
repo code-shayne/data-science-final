@@ -6,7 +6,7 @@ library(dplyr)
 library(tidyr)
 library(viridis)
 
-#read in file
+#read in and pre-process file
 power_plant = read_csv("California_Power_Plants.csv")
 power_plant <- power_plant |> 
   janitor::clean_names()
