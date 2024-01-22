@@ -1,5 +1,4 @@
 library(tidyverse)
-<<<<<<< HEAD
 library(janitor)
 library(ggthemes)
 library(ggridges)
@@ -24,7 +23,7 @@ ggplot(company_plants, aes(x = `capacity_latest`, y = `county`, fill = ..x..)) +
     panel.spacing = unit(0.1, "lines"),
     strip.text.x = element_text(size = 8)
   )
-=======
+
 library(ggthemes)
 library(janitor)
 library(hrbrthemes)
