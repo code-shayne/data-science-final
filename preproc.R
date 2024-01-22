@@ -7,6 +7,19 @@ create_report(power_plant)
 power_plant <- power_plant |>
   mutate(year = year(StartDate)) |> 
   arrange(year)
-power_plant |> 
+count <- power_plant |> 
   group_by(year, PriEnergySource) |> 
   summarize(count = sum(active_num))
+library(animation)
+p <- ggplot(count, aes(x="", y=count, fill=PriEnergySource)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+anim <- p + 
+  transition_states(year,
+                    transition_length = 2,
+                    state_length = 1)
+
+animate(
+  anim + enter_fade() + exit_fly(y_loc = 1),
+  renderer = av_renderer()
+)
