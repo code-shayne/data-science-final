@@ -23,3 +23,7 @@ animate(
   anim + enter_fade() + exit_fly(y_loc = 1),
   renderer = av_renderer()
 )
+
+county_count <- power_plant |> 
+  group_by(year, county)|> 
+  summarize(num_plants = sum(active_num))
